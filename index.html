@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VR Fruit Gallery</title>
+
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+
+  <style>
+    body { margin: 0; }
+  </style>
+
+<script>
+AFRAME.registerComponent('show-model', {
+  schema: {
+    message: { type: 'string' },
+    model: { type: 'selector' }
+  },
+
+  init: function () {
+    this.el.addEventListener('click', () => {
+
+      // Check if the clicked model is currently visible
+      const isVisible = this.data.model && this.data.model.getAttribute('visible');
+
+      // Hide all models
+      document.querySelectorAll('.fitness-model')
+        .forEach(m => m.setAttribute('visible', false));
+
+      if (isVisible) {
+        // It was already visible, so we just hide it and reset the text
+        document.querySelector('#infoText')
+          .setAttribute('value', 'VR Fruit Gallery');
+      } else {
+        // Show the selected model and update text
+        if (this.data.model) {
+          this.data.model.setAttribute('visible', true);
+        }
+        document.querySelector('#infoText')
+          .setAttribute('value', this.data.message);
+      }
+
+    });
+  }
+});
+</script>
+
+</head>
+
+<body>
+
+<a-scene background="color: #f2f2f2">
+
+  <!-- CAMERA -->
+  <a-entity position="0 0 3" wasd-controls>
+    <a-entity camera look-controls position="0 1.6 0">
+      <a-cursor raycaster="objects: .clickable"></a-cursor>
+    </a-entity>
+  </a-entity>
+
+  <!-- LIGHT -->
+  <a-light type="ambient" intensity="0.8"></a-light>
+  <a-light type="directional" position="0 5 5"></a-light>
+
+  <!-- FLOOR -->
+  <a-plane position="0 -1 0" rotation="-90 0 0"
+           width="12" height="12" color="#9CAF88"></a-plane>
+
+  <!-- WALLS -->
+  <a-plane position="0 2 -6" width="12" height="5" color="#FFA4A4"></a-plane>
+
+  <a-plane position="-6 2 0" rotation="0 90 0"
+           width="12" height="5" color="#FFBDBD"></a-plane>
+
+  <a-plane position="6 2 0" rotation="0 -90 0"
+           width="12" height="5" color="#FFBDBD"></a-plane>
+
+  <!-- CEILING -->
+  <a-plane position="0 5 0" rotation="90 0 0"
+           width="12" height="12" color="#FFF5F5"></a-plane>
+
+  <!-- TEXT -->
+  <a-text id="infoText"
+          value="VR Fruit Gallery"
+          position="0 4 -5.8"
+          align="center"
+          width="10"
+          color="#8A3324">
+  </a-text>
+
+  <!-- ================= MODELS ================= -->
+
+  <a-entity id="apple3D" class="fitness-model"
+            gltf-model="models/red_apple.glb"
+            position="0 0 2"
+            scale="3 3 3"
+            visible="false"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
+  </a-entity>
+
+  <a-entity id="banana3D" class="fitness-model"
+            gltf-model="models/banana_3d_scan.glb"
+            position="0 0 2"
+            scale="0.007 0.007 0.007"
+            visible="false"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
+  </a-entity>
+
+  <a-entity id="orange3D" class="fitness-model"
+            gltf-model="models/orange.glb"
+            position="0 0 2"
+            scale="3 3 3"
+            visible="false"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
+  </a-entity>
+
+  <a-entity id="strawberry3D" class="fitness-model"
+            gltf-model="models/strawberry_real_design.glb"
+            position="0 0 2"
+            scale="0.1 0.1 0.1"
+            visible="false"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
+  </a-entity>
+
+  <a-entity id="watermelon3D" class="fitness-model"
+            gltf-model="models/watermelon.glb"
+            position="0 0 2"
+            scale="3 3 3"
+            visible="false"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
+  </a-entity>
+
+  <!-- ================= POSTERS ================= -->
+
+  <!-- Back Wall -->
+  <a-plane class="clickable"
+           src="images/apple.png"
+           position="-3 1.6 -5.9"
+           width="2" height="2"
+           show-model="message: Apple; model: #apple3D">
+  </a-plane>
+
+  <a-plane class="clickable"
+           src="images/banana.png"
+           position="0 1.6 -5.9"
+           width="2" height="2"
+           show-model="message: Banana; model: #banana3D">
+  </a-plane>
+
+  <a-plane class="clickable"
+           src="images/orange.png"
+           position="3 1.6 -5.9"
+           width="2" height="2"
+           show-model="message: Orange; model: #orange3D">
+  </a-plane>
+
+  <!-- Side Walls -->
+  <a-plane class="clickable"
+           src="images/strawberry.png"
+           position="-5.8 1.6 0"
+           rotation="0 90 0"
+           width="2" height="2"
+           show-model="message: Strawberry; model: #strawberry3D">
+  </a-plane>
+
+  <a-plane class="clickable"
+           src="images/watermelon.png"
+           position="5.8 1.6 0"
+           rotation="0 -90 0"
+           width="2" height="2"
+           show-model="message: Watermelon; model: #watermelon3D">
+  </a-plane>
+
+</a-scene>
+
+</body>
+</html>
