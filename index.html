@@ -1,156 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>VR Fruit Gallery</title>
 
-    <!-- A-Frame -->
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 
-    <!-- Local AR -->
-    <script src="./aframe-ar-main/dist/aframe-ar.min.js"></script>
+  <style>
+    body { margin: 0; }
+  </style>
 
-    <title>MarkLess - Fruity AR</title>
+<script>
+AFRAME.registerComponent('show-model', {
+  schema: {
+    message: { type: 'string' },
+    model: { type: 'selector' }
+  },
 
-    <style>
-        body { margin: 0; overflow: hidden; }
-    </style>
+  init: function () {
+    this.el.addEventListener('click', () => {
+
+      document.querySelector('#infoText')
+        .setAttribute('value', this.data.message);
+
+      document.querySelectorAll('.fruit-model')
+        .forEach(m => m.setAttribute('visible', false));
+
+      if (this.data.model) {
+        this.data.model.setAttribute('visible', true);
+      }
+
+    });
+  }
+});
+</script>
+
 </head>
 
 <body>
 
-<script>
-function showMessage(message){
-    let hud = document.querySelector("#hud");
-    if(hud){
-        hud.setAttribute('value', message);
-    }
-}
+<a-scene background="color: #FFF8F0">
 
-AFRAME.registerComponent('ar-logic',{
-    init: function(){
-        showMessage('🍓 Fruity AR Ready');
-    },
-
-    tick : function(){
-        let cam = document.querySelector("#cam");
-        if(!cam || !cam.components.raycaster){ return; }
-
-        let collision = cam.components.raycaster.getIntersection(this.el);
-        if(!collision){ return; }
-
-        let point = collision.point;
-
-        showMessage(
-            '📍 X:' + point.x.toFixed(2) +
-            ' Z:' + point.z.toFixed(2)
-        );
-
-        let circle = document.querySelector("#circle");
-        if(circle){
-            circle.setAttribute('position', point);
-        }
-    }
-});
-
-// Place model on touch
-window.addEventListener('touchstart', function(){
-    let box = document.querySelector("#box");
-    let circle = document.querySelector("#circle");
-
-    if(!box || !circle) return;
-
-    let pos = circle.getAttribute('position');
-    box.setAttribute('position', pos);
-
-    showMessage("🍉 Object Placed!");
-});
-</script>
-
-<a-scene ar ar-logic background="color: #FFF8E7">
-
-    <!-- Camera -->
-    <a-camera id="cam" ar-raycaster raycaster="objects:.clickable;">
-        <a-text id="hud" 
-            value="Loading..." 
-            position="0 -0.1 -0.25"
-            align="center"
-            color="#FF4081">
-        </a-text>
-    </a-camera>
-
-    <!-- 🍉 Ground -->
-    <a-plane 
-        class="clickable"
-        rotation="-90 0 0" 
-        width="20" 
-        height="20"
-        color="#A5D6A7"
-        material="shader: standard; roughness:0.8;">
-    </a-plane>
-
-    <!-- 🎯 Cursor -->
-    <a-ring
-        id="circle"
-        class="clickable"
-        rotation="-90 0 0"
-        radius-inner="0.07"
-        radius-outer="0.09"
-        color="#FF9800"
-        material="emissive: #FFA726; emissiveIntensity: 0.9">
-    </a-ring>
-
-    <!-- 🍎 Apple -->
-    <a-sphere 
-        class="clickable"
-        position="1 0.5 -2" 
-        radius="0.3"
-        color="#E53935"
-        material="emissive:#FF5252; emissiveIntensity:0.5">
-    </a-sphere>
-
-    <!-- 🍊 Orange -->
-    <a-sphere 
-        class="clickable"
-        position="-1 0.5 -2" 
-        radius="0.3"
-        color="#FB8C00"
-        material="emissive:#FFA726; emissiveIntensity:0.5">
-    </a-sphere>
-
-    <!-- 🍉 Watermelon -->
-    <a-cylinder 
-        class="clickable"
-        position="0 0.4 -3" 
-        radius="0.4"
-        height="0.3"
-        color="#2E7D32"
-        material="emissive:#66BB6A; emissiveIntensity:0.4">
-    </a-cylinder>
-
-    <!-- 🍇 Grapes -->
-    <a-entity position="2 0.5 -3" class="clickable">
-        <a-sphere radius="0.15" position="0 0 0" color="#6A1B9A"></a-sphere>
-        <a-sphere radius="0.15" position="0.2 0 0" color="#8E24AA"></a-sphere>
-        <a-sphere radius="0.15" position="-0.2 0 0" color="#7B1FA2"></a-sphere>
+  <!-- CAMERA -->
+  <a-entity position="0 0 3" wasd-controls>
+    <a-entity camera look-controls position="0 1.6 0">
+      <a-cursor raycaster="objects: .clickable" color="#FF6B6B"></a-cursor>
     </a-entity>
+  </a-entity>
 
-    <!-- 🍍 Pineapple -->
-    <a-cone 
-        class="clickable"
-        position="-2 0.5 -3"
-        radius-bottom="0.3"
-        height="0.6"
-        color="#FDD835"
-        material="emissive:#FFF176; emissiveIntensity:0.4">
-    </a-cone>
+  <!-- LIGHTING (Fresh Bright Theme) -->
+  <a-light type="ambient" intensity="0.9" color="#ffffff"></a-light>
+  <a-light type="directional" position="2 5 3" intensity="0.8"></a-light>
 
-    <!-- 🎯 Your Model -->
-    <a-gltf-model id="box"
-        src="./model/deadpool.glb"
-        scale="1 1 1"
-        position="0 0 0">
-    </a-gltf-model>
+  <!-- FLOOR -->
+  <a-plane position="0 -1 0" rotation="-90 0 0"
+           width="12" height="12"
+           color="#FFF0E0">
+  </a-plane>
+
+  <!-- 🍉 FRUIT THEME WALLS -->
+
+  <!-- Back Wall (Gradient feel using soft color) -->
+  <a-plane position="0 2 -6"
+           width="12" height="5"
+           color="#FFE5E5">
+  </a-plane>
+
+  <!-- Left Wall -->
+  <a-plane position="-6 2 0"
+           rotation="0 90 0"
+           width="12" height="5"
+           color="#FFF9C4">
+  </a-plane>
+
+  <!-- Right Wall -->
+  <a-plane position="6 2 0"
+           rotation="0 -90 0"
+           width="12" height="5"
+           color="#E0F7FA">
+  </a-plane>
+
+  <!-- CEILING -->
+  <a-plane position="0 5 0"
+           rotation="90 0 0"
+           width="12" height="12"
+           color="#FFFFFF">
+  </a-plane>
+
+  <!-- TEXT -->
+  <a-text id="infoText"
+          value="Fruit Gallery"
+          position="0 4 -5.8"
+          align="center"
+          width="10"
+          color="#FF4D4D"
+          material="emissive:#FF4D4D; emissiveIntensity:0.4">
+  </a-text>
+
+  <!-- ================= MODELS ================= -->
+
+  <a-entity id="apple3D" class="fruit-model"
+            gltf-model="models/red_apple.glb"
+            position="0 0 2"
+            scale="0.8 0.8 0.8"
+            visible="false"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
+  </a-entity>
+
+  <a-entity id="banana3D" class="fruit-model"
+            gltf-model="models/banana_3d_scan.glb"
+            position="0 0 2"
+            scale="1 1 1"
+            visible="false"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
+  </a-entity>
+
+  <a-entity id="orange3D" class="fruit-model"
+            gltf-model="models/orange.glb"
+            position="0 0 2"
+            scale="0.8 0.8 0.8"
+            visible="false"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
+  </a-entity>
+
+  <a-entity id="strawberry3D" class="fruit-model"
+            gltf-model="models/strawberry_real_design.glb"
+            position="0 0 2"
+            scale="0.5 0.5 0.5"
+            visible="false"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
+  </a-entity>
+
+  <a-entity id="watermelon3D" class="fruit-model"
+            gltf-model="models/watermelon.glb"
+            position="0 0 2"
+            scale="0.6 0.6 0.6"
+            visible="false"
+            animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
+  </a-entity>
+
+  <!-- ================= POSTERS ================= -->
+
+  <!-- Back Wall -->
+  <a-plane class="clickable"
+           src="images/apple.png"
+           position="-4 1.6 -5.9"
+           width="2" height="2"
+           material="emissive:#FF4D4D; emissiveIntensity:0.2"
+           show-model="message: Apple - Healthy & Sweet; model: #apple3D">
+  </a-plane>
+
+  <a-plane class="clickable"
+           src="images/banana.png"
+           position="-2 1.6 -5.9"
+           width="2" height="2"
+           material="emissive:#FFD54F; emissiveIntensity:0.2"
+           show-model="message: Banana - Energy Booster; model: #banana3D">
+  </a-plane>
+
+  <a-plane class="clickable"
+           src="images/orange.png"
+           position="0 1.6 -5.9"
+           width="2" height="2"
+           material="emissive:#FFA726; emissiveIntensity:0.2"
+           show-model="message: Orange - Rich in Vitamin C; model: #orange3D">
+  </a-plane>
+
+  <a-plane class="clickable"
+           src="images/strawberry.png"
+           position="2 1.6 -5.9"
+           width="2" height="2"
+           material="emissive:#FF4081; emissiveIntensity:0.2"
+           show-model="message: Strawberry - Fresh & Juicy; model: #strawberry3D">
+  </a-plane>
+
+  <a-plane class="clickable"
+           src="images/watermelon.png"
+           position="4 1.6 -5.9"
+           width="2" height="2"
+           material="emissive:#66BB6A; emissiveIntensity:0.2"
+           show-model="message: Watermelon - Refreshing & Cool; model: #watermelon3D">
+  </a-plane>
 
 </a-scene>
 
