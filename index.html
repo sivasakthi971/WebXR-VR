@@ -39,7 +39,7 @@ AFRAME.registerComponent('show-model', {
 
 <body>
 
-<a-scene background="color: #FFF8F0">
+<a-scene background="color: #0F0F14">
 
   <!-- CAMERA -->
   <a-entity position="0 0 3" wasd-controls>
@@ -48,43 +48,51 @@ AFRAME.registerComponent('show-model', {
     </a-entity>
   </a-entity>
 
-  <!-- LIGHTING (Fresh Bright Theme) -->
-  <a-light type="ambient" intensity="0.9" color="#ffffff"></a-light>
-  <a-light type="directional" position="2 5 3" intensity="0.8"></a-light>
+  <!-- LIGHTING -->
+  <a-light type="ambient" intensity="0.6" color="#ffffff"></a-light>
+  <a-light type="directional" position="2 5 3" intensity="0.7"></a-light>
+
+  <!-- 🍇 GLOW LIGHTS -->
+  <a-entity light="type: point; color: #FF3B3B; intensity: 0.7" position="0 3 -5"></a-entity>
+  <a-entity light="type: point; color: #FFD600; intensity: 0.7" position="-5 3 0"></a-entity>
+  <a-entity light="type: point; color: #00E676; intensity: 0.7" position="5 3 0"></a-entity>
 
   <!-- FLOOR -->
   <a-plane position="0 -1 0" rotation="-90 0 0"
            width="12" height="12"
-           color="#FFF0E0">
+           color="#1A1A1A">
   </a-plane>
 
-  <!-- 🍉 FRUIT THEME WALLS -->
+  <!-- 🍉 GLOWING FRUIT WALLS -->
 
-  <!-- Back Wall (Gradient feel using soft color) -->
+  <!-- Back Wall -->
   <a-plane position="0 2 -6"
            width="12" height="5"
-           color="#FFE5E5">
+           color="#2B0B0B"
+           material="emissive:#FF3B3B; emissiveIntensity:0.35">
   </a-plane>
 
   <!-- Left Wall -->
   <a-plane position="-6 2 0"
            rotation="0 90 0"
            width="12" height="5"
-           color="#FFF9C4">
+           color="#2B2600"
+           material="emissive:#FFD600; emissiveIntensity:0.35">
   </a-plane>
 
   <!-- Right Wall -->
   <a-plane position="6 2 0"
            rotation="0 -90 0"
            width="12" height="5"
-           color="#E0F7FA">
+           color="#0B2B1B"
+           material="emissive:#00E676; emissiveIntensity:0.35">
   </a-plane>
 
   <!-- CEILING -->
   <a-plane position="0 5 0"
            rotation="90 0 0"
            width="12" height="12"
-           color="#FFFFFF">
+           color="#111111">
   </a-plane>
 
   <!-- TEXT -->
@@ -94,7 +102,7 @@ AFRAME.registerComponent('show-model', {
           align="center"
           width="10"
           color="#FF4D4D"
-          material="emissive:#FF4D4D; emissiveIntensity:0.4">
+          material="emissive:#FF4D4D; emissiveIntensity:0.6">
   </a-text>
 
   <!-- ================= MODELS ================= -->
@@ -102,7 +110,7 @@ AFRAME.registerComponent('show-model', {
   <a-entity id="apple3D" class="fruit-model"
             gltf-model="models/red_apple.glb"
             position="0 0 2"
-            scale="3 3 3"
+            scale="0.8 0.8 0.8"
             visible="false"
             animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
   </a-entity>
@@ -110,7 +118,7 @@ AFRAME.registerComponent('show-model', {
   <a-entity id="banana3D" class="fruit-model"
             gltf-model="models/banana_3d_scan.glb"
             position="0 0 2"
-            scale="0.01 0.01 0.01"
+            scale="1 1 1"
             visible="false"
             animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
   </a-entity>
@@ -118,7 +126,7 @@ AFRAME.registerComponent('show-model', {
   <a-entity id="orange3D" class="fruit-model"
             gltf-model="models/orange.glb"
             position="0 0 2"
-            scale="3 3 3"
+            scale="0.8 0.8 0.8"
             visible="false"
             animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
   </a-entity>
@@ -126,7 +134,7 @@ AFRAME.registerComponent('show-model', {
   <a-entity id="strawberry3D" class="fruit-model"
             gltf-model="models/strawberry_real_design.glb"
             position="0 0 2"
-            scale="0.1 0.1 0.1"
+            scale="0.5 0.5 0.5"
             visible="false"
             animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
   </a-entity>
@@ -134,19 +142,18 @@ AFRAME.registerComponent('show-model', {
   <a-entity id="watermelon3D" class="fruit-model"
             gltf-model="models/watermelon.glb"
             position="0 0 2"
-            scale="3 3 3"
+            scale="0.6 0.6 0.6"
             visible="false"
             animation="property: rotation; to: 0 360 0; loop: true; dur: 6000">
   </a-entity>
 
   <!-- ================= POSTERS ================= -->
 
-  <!-- Back Wall -->
   <a-plane class="clickable"
            src="images/apple.png"
            position="-4 1.6 -5.9"
            width="2" height="2"
-           material="emissive:#FF4D4D; emissiveIntensity:0.2"
+           material="emissive:#FF3B3B; emissiveIntensity:0.3"
            show-model="message: Apple - Healthy & Sweet; model: #apple3D">
   </a-plane>
 
@@ -154,7 +161,7 @@ AFRAME.registerComponent('show-model', {
            src="images/banana.png"
            position="-2 1.6 -5.9"
            width="2" height="2"
-           material="emissive:#FFD54F; emissiveIntensity:0.2"
+           material="emissive:#FFD600; emissiveIntensity:0.3"
            show-model="message: Banana - Energy Booster; model: #banana3D">
   </a-plane>
 
@@ -162,7 +169,7 @@ AFRAME.registerComponent('show-model', {
            src="images/orange.png"
            position="0 1.6 -5.9"
            width="2" height="2"
-           material="emissive:#FFA726; emissiveIntensity:0.2"
+           material="emissive:#FFA726; emissiveIntensity:0.3"
            show-model="message: Orange - Rich in Vitamin C; model: #orange3D">
   </a-plane>
 
@@ -170,7 +177,7 @@ AFRAME.registerComponent('show-model', {
            src="images/strawberry.png"
            position="2 1.6 -5.9"
            width="2" height="2"
-           material="emissive:#FF4081; emissiveIntensity:0.2"
+           material="emissive:#FF4081; emissiveIntensity:0.3"
            show-model="message: Strawberry - Fresh & Juicy; model: #strawberry3D">
   </a-plane>
 
@@ -178,7 +185,7 @@ AFRAME.registerComponent('show-model', {
            src="images/watermelon.png"
            position="4 1.6 -5.9"
            width="2" height="2"
-           material="emissive:#66BB6A; emissiveIntensity:0.2"
+           material="emissive:#66BB6A; emissiveIntensity:0.3"
            show-model="message: Watermelon - Refreshing & Cool; model: #watermelon3D">
   </a-plane>
 
